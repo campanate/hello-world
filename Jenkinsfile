@@ -31,7 +31,7 @@ volumes: [
           passwordVariable: 'DOCKER_PASSWORD']]) {
             sh """
                 docker login -u ${DOCKER_USERNAME} -p '${DOCKER_PASSWORD}'
-                docker build -t docker.io/${DOCKER_USERNAME}/${localImageName}:${gitCommit} .
+                docker build --network=host -t docker.io/${DOCKER_USERNAME}/${localImageName}:${gitCommit} .
                 docker run docker.io/${DOCKER_USERNAME}/${localImageName}:${gitCommit} go test
                 docker push docker.io/${DOCKER_USERNAME}/${localImageName}:${gitCommit}
                 docker rmi docker.io/${DOCKER_USERNAME}/${localImageName}:${gitCommit}
