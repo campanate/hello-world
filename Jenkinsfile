@@ -21,22 +21,21 @@ volumes: [
     def myRepo = checkout scm
     def gitBranch = myRepo.GIT_BRANCH
     def gitCommit = myRepo.GIT_COMMIT
-    def dockerUsername = ""
+    def dockerUsername = "vcampanate"
    
     stage('Build and Test image') {
       container('docker') {
           withCredentials([[$class: 'UsernamePasswordMultiBinding',
           credentialsId: 'dockerhub',
-          usernameVariable: 'DOCKER_USERNAME',
           passwordVariable: 'DOCKER_PASSWORD']]) {
             sh """
-                docker login -u ${DOCKER_USERNAME} -p '${DOCKER_PASSWORD}'
-                docker build --network=host -t docker.io/${DOCKER_USERNAME}/${localImageName}:${gitCommit} .
-                docker run --name hello-world-test docker.io/${DOCKER_USERNAME}/${localImageName}:${gitCommit} go test
-                docker push docker.io/${DOCKER_USERNAME}/${localImageName}:${gitCommit}
-                docker rmi -f docker.io/${DOCKER_USERNAME}/${localImageName}:${gitCommit}
+                docker login -u ${dockerUsername} -p '${DOCKER_PASSWORD}'
+                docker build --network=host -t docker.io/${dockerUsername}/${localImageName}:${gitCommit} .
+                docker run --name hello-world-test docker.io/${dockerUsername}/${localImageName}:${gitCommit} go test
+                docker push docker.io/${dockerUsername}/${localImageName}:${gitCommit}
+                docker rmi -f docker.io/${dockerUsername}/${localImageName}:${gitCommit}
               """
-            dockerUsername = ${DOCKER_USERNAME}
+          
 
           }
       }
