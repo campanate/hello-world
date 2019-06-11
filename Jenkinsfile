@@ -20,7 +20,7 @@ volumes: [
 
     def myRepo = checkout scm
     def gitBranch = myRepo.GIT_BRANCH
-    def gitCommit = newRepo.GIT_COMMIT
+    def gitCommit = myRepo.GIT_COMMIT
     def dockerUsername = ""
    
     stage('Build and Test image') {
