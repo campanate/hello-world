@@ -32,7 +32,8 @@ volumes: [
             sh """
                 docker login -u ${DOCKER_USERNAME} -p '${DOCKER_PASSWORD}'
                 docker build --network=host -t docker.io/${DOCKER_USERNAME}/${localImageName}:${gitCommit} .
-                docker run docker.io/${DOCKER_USERNAME}/${localImageName}:${gitCommit} go test
+                docker run --name hello-world-test docker.io/${DOCKER_USERNAME}/${localImageName}:${gitCommit} go test
+                docker stop hello-world-test
                 docker push docker.io/${DOCKER_USERNAME}/${localImageName}:${gitCommit}
                 docker rmi docker.io/${DOCKER_USERNAME}/${localImageName}:${gitCommit}
               """
