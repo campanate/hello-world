@@ -1,0 +1,80 @@
+{
+    "expectedArtifacts": [
+      {
+        "defaultArtifact": {
+          "kind": "default.s3",
+          "name": "s3://chart-bucket/hello-world-0.0.1.tgz",
+          "reference": "s3://chart-bucket/hello-world-0.0.1.tgz",
+          "type": "s3/object"
+        },
+        "displayName": "s3://chart-bucket/hello-api-0.0.1.tgz",
+        "matchArtifact": {
+          "kind": "s3",
+          "name": "s3://chart-bucket/hello-world-0.0.1.tgz",
+          "type": "s3/object"
+        },
+        "useDefaultArtifact": true,
+        "usePriorArtifact": false
+      }
+    ],
+    "parameterConfig": [],
+    "stages": [
+      {
+        "expectedArtifacts": [
+          {
+            "defaultArtifact": {},
+            "matchArtifact": {
+              "kind": "base64",
+              "name": "helloworld-baked",
+              "type": "embedded/base64"
+            },
+            "useDefaultArtifact": false
+          }
+        ],
+        "inputArtifacts": [
+          {
+            "account": "default-s3-account"
+          }
+        ],
+        "name": "Bake",
+        "namespace": "default",
+        "outputName": "hello-world",
+        "overrides": {
+          "image.repository": "${trigger[\"properties\"][\"repository\"]}",
+          "image.tag": "${trigger[\"properties\"][\"tag\"]}"
+        },
+        "refId": "1",
+        "requisiteStageRefIds": [],
+        "templateRenderer": "HELM2",
+        "type": "bakeManifest"
+      },
+      {
+        "account": "k8s-cluster",
+        "cloudProvider": "kubernetes",
+        "manifestArtifactAccount": "embedded-artifact",
+        "moniker": {
+          "app": "hello-world"
+        },
+        "name": "Deploy",
+        "refId": "2",
+        "relationships": {
+          "loadBalancers": [],
+          "securityGroups": []
+        },
+        "requisiteStageRefIds": [
+          "1"
+        ],
+        "source": "artifact",
+        "type": "deployManifest"
+      }
+    ],
+    "triggers": [
+      {
+        "enabled": true,
+        "job": "HelloWorld",
+        "master": "my-jenkins-master",
+        "propertyFile": "image.properties",
+        "type": "jenkins"
+      }
+    ]
+  }
