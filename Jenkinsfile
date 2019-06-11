@@ -43,7 +43,7 @@ volumes: [
     }
 
     stage("Put image on property files") {
-      writeFile file: 'image.properties', text: "repository=docker.io/${dockerUsername}/$[projectName}\ntag=${gitCommit}"
+      writeFile file: 'image.properties', text: "repository=docker.io/${dockerUsername}/${projectName}\ntag=${gitCommit}"
       archiveArtifacts artifacts: 'image.properties', excludes: ''
       
     }
