@@ -31,10 +31,10 @@ volumes: [
           passwordVariable: 'DOCKER_PASSWORD']]) {
             sh """
                 docker login -u ${DOCKER_USERNAME} -p '${DOCKER_PASSWORD}'
-                docker build -t docker.io/${DOCKER_USERNAME}/${projectName}:${gitCommit} .
-                docker run docker.io/${DOCKER_USERNAME}/${projectName}:${gitCommit} go test
-                docker push docker.io/${DOCKER_USERNAME}/${projectName}:${gitCommit}
-                docker rmi docker.io/${DOCKER_USERNAME}/${projectName}:${gitCommit}
+                docker build -t docker.io/${DOCKER_USERNAME}/${localImageName}:${gitCommit} .
+                docker run docker.io/${DOCKER_USERNAME}/${localImageName}:${gitCommit} go test
+                docker push docker.io/${DOCKER_USERNAME}/${localImageName}:${gitCommit}
+                docker rmi docker.io/${DOCKER_USERNAME}/${localImageName}:${gitCommit}
               """
             dockerUsername = ${DOCKER_USERNAME}
 
@@ -43,7 +43,7 @@ volumes: [
     }
 
     stage("Put image on property files") {
-      writeFile file: 'image.properties', text: "repository=docker.io/${dockerUsername}/${projectName}\ntag=${gitCommit}"
+      writeFile file: 'image.properties', text: "repository=docker.io/${dockerUsername}/${localImageName}\ntag=${gitCommit}"
       archiveArtifacts artifacts: 'image.properties', excludes: ''
       
     }
