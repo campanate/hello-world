@@ -27,6 +27,7 @@ volumes: [
       container('docker') {
           withCredentials([[$class: 'UsernamePasswordMultiBinding',
           credentialsId: 'dockerhub',
+          usernameVariable: 'DOCKER_USERNAME',
           passwordVariable: 'DOCKER_PASSWORD']]) {
             sh """
                 docker login -u ${dockerUsername} -p '${DOCKER_PASSWORD}'
@@ -35,7 +36,7 @@ volumes: [
                 docker push docker.io/${dockerUsername}/${localImageName}:${gitCommit}
                 docker rmi -f docker.io/${dockerUsername}/${localImageName}:${gitCommit}
               """
-          
+            dockerUsername = "${dockerUsername}"
 
           }
       }
